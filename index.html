@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>DEAME TIENDA</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f7f7f7; margin: 0; padding: 0; }
+        .container { max-width: 700px; margin: 40px auto; background: #fff; padding: 30px; box-shadow: 0 2px 8px #aaa; border-radius: 7px; }
+        h1 { color: #4461e3; }
+        .files { margin-bottom: 40px; }
+        .files a { display: inline-block; margin: 8px 16px 8px 0; color: #0366d6; text-decoration: none; border-bottom: 1px dashed #0366d6;}
+        .files a:hover { border-bottom: 1px solid #0366d6; }
+        .file-loader { background: #eef3fa; padding: 15px; border-radius: 5px; }
+        .file-loader input[type="file"] { margin-bottom: 10px; }
+        .output { margin-top: 18px; background: #222; color: #efe; padding: 10px; border-radius: 3px; max-height: 250px; overflow-y: auto; font-size: 16px;}
+        .small { color: #888; font-size: 13px; margin-top: 10px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>DEAME TIENDA</h1>
+        <p>Bienvenido. Aquí puedes descargar archivos útiles para tu app Python y también probar abrir archivos de texto localmente.</p>
+        
+        <div class="files">
+            <h2>Descargar archivos</h2>
+            <!-- Cambia los nombres/paths de abajo según tus archivos -->
+            <a href="archivo1.txt" download>Descargar archivo1.txt</a>
+            <a href="ejemplo.zip" download>Descargar ejemplo.zip</a>
+            <a href="config.json" download>Descargar config.json</a>
+            <!-- Agrega más enlaces si subes más archivos -->
+        </div>
+        
+        <div class="file-loader">
+            <h2>Probar archivos en tu navegador</h2>
+            <input type="file" id="fileInput" />
+            <button onclick="resetOutput()">Limpiar salida</button>
+            <div class="output" id="output">Aquí verás el contenido del archivo de texto.<br>
+            <span class="small">(Sólo soporta mostrar archivos de texto plano o JSON.)</span>
+            </div>
+        </div>
+        <div style="margin-top:35px; font-size:12px; color:#999;">
+            <strong>¿Usas una app de Python?</strong> <br>
+            Puedes descargar estos archivos desde aquí y tu app puede acceder a ellos usando Python. <br>
+            <pre style="background:#f1f1f1; color:#333; padding:7px; border-radius:5px;">
+import requests
+url = "https://17artuuroo.github.io/DEAME-TIENDA/archivo1.txt" # Cambia por el tuyo
+resp = requests.get(url)
+if resp.status_code == 200:
+    with open("archivo1.txt", "wb") as f:
+        f.write(resp.content)
+            </pre>
+        </div>
+    </div>
+    <script>
+    function resetOutput() {
+        document.getElementById('output').textContent = "Aquí verás el contenido del archivo de texto.\n(Sólo soporta mostrar archivos de texto plano o JSON.)";
+    }
+
+    document.getElementById('fileInput').addEventListener('change', function(evt) {
+        const file = evt.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Intenta formatear como JSON, si aplica:
+            let content = e.target.result;
+            try {
+                if (file.name.endsWith('.json')) {
+                    content = JSON.stringify(JSON.parse(content), null, 2);
+                }
+            } catch {}
+            document.getElementById('output').textContent = content;
+        };
+        reader.readAsText(file);
+    });
+    </script>
+</body>
+</html>

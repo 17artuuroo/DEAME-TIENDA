@@ -1,2 +1,1 @@
-# DEAME-TIENDA
-Tienda de aspectos de DEAME
+﻿## Tienda DEAME\nExtensiones visuales para tu navegador DEAME.

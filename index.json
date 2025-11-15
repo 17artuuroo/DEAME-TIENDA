@@ -1,0 +1,14 @@
+﻿[
+    {
+        "nombre":  "neon",
+        "url":  "https://TUUSUARIO.github.io/DEAME-Tienda/neon/neon.json"
+    },
+    {
+        "nombre":  "retro",
+        "url":  "https://TUUSUARIO.github.io/DEAME-Tienda/retro/retro.json"
+    },
+    {
+        "nombre":  "minimal",
+        "url":  "https://TUUSUARIO.github.io/DEAME-Tienda/minimal/minimal.json"
+    }
+]

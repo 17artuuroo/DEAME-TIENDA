@@ -155,21 +155,30 @@
   </div>
   <div class="credit">© 2025 DEAME TIENDA &mdash; <a href="https://17artuuroo.github.io/DEAME-TIENDA/" style="color:#7b8ef5;text-decoration:none;">Ver repositorio</a></div>
 
-  <script>
-  function aplicarTema(tema) {
-    document.title = "AplicarTema:" + tema; // Tu app Python puede detectar el cambio de tema por 'document.title'
-    descargar(`https://17artuuroo.github.io/DEAME-TIENDA/${tema}/style.css`);
-    descargar(`https://17artuuroo.github.io/DEAME-TIENDA/${tema}/config.json`);
-    alert('Tema "'+tema+'" aplicado. Si usas tu propio navegador Python, se descargarán y aplicarán los archivos del tema automáticamente.');
-  }
-  function descargar(url) {
-    // Descarga por navegador estándar (descarga directa de archivos)
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = '';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+<script>
+function aplicarTema(tema) {
+  const base = `https://17artuuroo.github.io/DEAME-TIENDA/${tema}`;
+  const styleUrl = `${base}/style.css`;
+  const configUrl = `${base}/config.json`;
+
+  // Llama al navegador DEAME usando esquema personalizado
+  const url = `deame://instalar?tema=${tema}&style=${encodeURIComponent(styleUrl)}&config=${encodeURIComponent(configUrl)}`;
+  window.location.href = url;
+
+  // Descarga directa por si el navegador no intercepta
+  descargar(styleUrl);
+  descargar(configUrl);
+}
+
+function descargar(url) {
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = '';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+</script>
   }
   </script>
 </body>

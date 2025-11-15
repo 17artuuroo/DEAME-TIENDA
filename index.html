@@ -1,87 +1,102 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>DEAME TIENDA</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f7f7f7; margin: 0; padding: 0; }
-        .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 30px; box-shadow: 0 2px 8px #aaa; border-radius: 7px; }
-        h1 { color: #4461e3; }
-        .files { margin-bottom: 40px; }
-        .files a { display: inline-block; margin: 8px 16px 8px 0; color: #0366d6; text-decoration: none; border-bottom: 1px dashed #0366d6;}
-        .files a:hover { border-bottom: 1px solid #0366d6; }
-        .file-loader { background: #eef3fa; padding: 15px; border-radius: 5px; }
-        .file-loader input[type="file"] { margin-bottom: 10px; }
-        .output { margin-top: 18px; background: #222; color: #efe; padding: 10px; border-radius: 3px; max-height: 250px; overflow-y: auto; font-size: 16px;}
-        .small { color: #888; font-size: 13px; margin-top: 10px;}
-        details { margin-top: 25px; }
-        summary { font-weight: bold; cursor: pointer; color: #4461e3; font-size: 19px;}
-        pre, code { font-size: 15px; background: #f2f2f2; color: #223; border-radius: 4px; padding: 7px; }
-        .readme-content { background: #f6f8fa; border-radius: 5px; padding: 20px; margin-top: 10px;}
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tienda DEAME</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+      color: #00ffff;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .card {
+      background: #1a1a1a;
+      border: 2px solid #00ffff44;
+      border-radius: 10px;
+      padding: 1rem;
+      transition: transform 0.2s ease;
+    }
+    .card:hover {
+      transform: scale(1.03);
+      border-color: #00ffff;
+    }
+    .card h2 {
+      margin-top: 0;
+      color: #00ffff;
+    }
+    .card pre {
+      background: #111;
+      padding: 0.5rem;
+      border-radius: 5px;
+      font-size: 0.85em;
+      overflow-x: auto;
+    }
+    .card button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      background: #00ffff;
+      color: #000;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .card button:hover {
+      background: #00cccc;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>DEAME TIENDA</h1>
-        <p>Bienvenido. Aquí puedes descargar los archivos útiles para tu app Python y ver sus contenidos.</p>
-        
-        <div class="files">
-            <h2>Descargar archivos</h2>
-            <a href="index.json" download>Descargar index.json</a>
-        </div>
-        
-        <div class="file-loader">
-            <h2>Probar archivos en tu navegador</h2>
-            <input type="file" id="fileInput" />
-            <button onclick="resetOutput()">Limpiar salida</button>
-            <div class="output" id="output">Aquí verás el contenido del archivo de texto.<br>
-            <span class="small">(Sólo soporta mostrar archivos de texto plano o JSON.)</span>
-            </div>
-        </div>
+  <h1>🛍️ Tienda de Extensiones DEAME</h1>
+  <div class="grid" id="contenedor"></div>
 
-        <details open>
-          <summary>Contenido de README.md</summary>
-          <div class="readme-content">
-                DEAME-TIENDA<br>
-                <br>
-                subo index.html con enlaces de descarga y visor para archivos
-          </div>
-        </details>
+  <script>
+    const contenedor = document.getElementById("contenedor");
 
-        <div style="margin-top:35px; font-size:12px; color:#999;">
-            <strong>¿Usas una app de Python?</strong> <br>
-            Puedes descargar estos archivos desde aquí y tu app puede acceder a ellos usando Python. <br>
-            <pre style="background:#f1f1f1; color:#333; padding:7px; border-radius:5px;">
-import requests
-url = "https://17artuuroo.github.io/DEAME-TIENDA/index.json" # Cambia por el que quieras descargar
-resp = requests.get(url)
-if resp.status_code == 200:
-    with open("index.json", "wb") as f:
-        f.write(resp.content)
-            </pre>
-        </div>
-    </div>
-    <script>
-    function resetOutput() {
-        document.getElementById('output').textContent = "Aquí verás el contenido del archivo de texto.\n(Sólo soporta mostrar archivos de texto plano o JSON.)";
+    async function cargarTienda() {
+      const indexUrl = "index.json"; // o URL completa si está en otro dominio
+      const lista = await fetch(indexUrl).then(r => r.json());
+
+      for (const item of lista) {
+        const datos = await fetch(item.url).then(r => r.json());
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const titulo = document.createElement("h2");
+        titulo.textContent = datos.nombre;
+
+        const pre = document.createElement("pre");
+        pre.textContent = JSON.stringify(datos, null, 2);
+
+        const boton = document.createElement("button");
+        boton.textContent = "Instalar";
+        boton.onclick = () => {
+          // Llama a tu navegador DEAME usando un esquema personalizado
+          window.location.href = `deame://instalar?url=${encodeURIComponent(item.url)}`;
+        };
+
+        card.appendChild(titulo);
+        card.appendChild(pre);
+        card.appendChild(boton);
+        contenedor.appendChild(card);
+      }
     }
 
-    document.getElementById('fileInput').addEventListener('change', function(evt) {
-        const file = evt.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            // Intenta formatear como JSON, si aplica:
-            let content = e.target.result;
-            try {
-                if (file.name.endsWith('.json')) {
-                    content = JSON.stringify(JSON.parse(content), null, 2);
-                }
-            } catch {}
-            document.getElementById('output').textContent = content;
-        };
-        reader.readAsText(file);
-    });
-    </script>
+    cargarTienda();
+  </script>
 </body>
 </html>
